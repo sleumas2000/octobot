@@ -1,0 +1,23 @@
+commands:
+  hug: {reactText: 'hugs {arg1}', reactTo: channel, reactType: me}
+  ping: {reactText: 'Pong {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8}
+      {arg9} {arg10}', reactTo: channel, reactType: me}
+  slap: {reactText: 'slaps {arg1}', reactTo: channel, reactType: me}
+helpText: {add: '|sr add command <name> <me|say> <channel|sender> <response> or |sr
+    add text <equals|contains> <text to match> <me|say> <channel|sender> <response>',
+  edit: '|sr edit command <name> <me|say> <channel|sender> <response> or |sr edit
+    text <equals|contains> <text to match> <me|say> <channel|sender> <response>',
+  help: 'Available commands: ADD, EDIT, LIST, REMOVE. Type |sr help <command> for
+    more help', list: '|sr list <command|text>', remove: '|sr remove command <name>
+    or |sr remove text <text to match>'}
+texts:
+- {matchText: a, matchType: equals, reactText: b, reactTo: channel, reactType: say}
+- {matchText: '1', matchType: equals, reactText: '2', reactTo: channel, reactType: say}
+- {matchText: ':(', matchType: contains, reactText: 'Cheer up, {sender}, All your
+    friends are here!', reactTo: channel, reactType: say}
+- {matchText: ':''(', matchType: contains, reactText: 'Cheer up, {sender}, All your
+    friends are here!', reactTo: channel, reactType: say}
+- {matchText: ;(, matchType: contains, reactText: 'Cheer up, {sender}, All your friends
+    are here!', reactTo: channel, reactType: say}
+- {matchText: 'D:', matchType: contains, reactText: 'Cheer up, {sender}, All your
+    friends are here!', reactTo: channel, reactType: say}
