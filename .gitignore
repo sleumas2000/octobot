@@ -1,2 +1,4 @@
 *.pyc
 __pycache__
+/verbose.txt
+/log.txt
