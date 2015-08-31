@@ -14,7 +14,10 @@ print(sys.version)
 with open("config.yml", "r") as cfgfile:
 	cfg = yaml.load(cfgfile)
 ircUnencrypted = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the unencrypted socket
-irc = ssl.wrap_socket(ircUnencrypted) # encrypts it	
+if cfg['ssl']: # if ssl, wrap it
+	irc = ssl.wrap_socket(ircUnencrypted) # encrypts it
+else: # if not, don't
+	irc = ircUnencrypted
 MODULE_EXTENSIONS = (".pyc",".py",".pyo")
 def packageContents(package_name):
 	file, pathname, description = imp.find_module(package_name)
@@ -75,7 +78,7 @@ def react(input,moduleList):
 					log(True,("Exception in module %s: %s " % (m,str(e))) )
 					log(False,"Traceback: "+str(traceback.format_exc()))
 			else:
-				log(True,"Module %s has no react function" % (m)) 
+				log(True,"Module %s has no react function" % (m))
 		except Exception as e:
 			log(True,("Exception in module %s: %s " % (m,str(e))) )
 			log(False,"Traceback: "+str(traceback.format_exc()))
@@ -139,7 +142,7 @@ def main():
 					closingStatus = t
 					log(True,"Link Closed. Reason: %s" % (closingStatus))
 					sys.exit()
-					break	
+					break
 				if t.find("KILL "+cfg["nick"]) != -1:
 					closingStatus = t.split(" ")[0]+" killed connection because "+" ".join(t.split(" ")[3:])
 					log(True,"Link Closed. Reason: %s" % (closingStatus))

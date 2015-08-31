@@ -1,7 +1,7 @@
 ---
 server: server
 port: 6697
-ssl: True
+ssl: true
 defaultChannels:
     - "#OctobotTest"
     - "#lobby"
