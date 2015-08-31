@@ -181,12 +181,6 @@ class Scanner(object):
         if ch == u'.' and self.check_document_end():
             return self.fetch_document_end()
 
-        # TODO: support for BOM within a stream.
-        #if ch == u'\uFEFF':
-        #    return self.fetch_bom()    <-- issue BOMToken
-
-        # Note: the order of the following checks is NOT significant.
-
         # Is it the flow sequence start indicator?
         if ch == u'[':
             return self.fetch_flow_sequence_start()
@@ -758,17 +752,6 @@ class Scanner(object):
         # stream. We do not yet support BOM inside the stream as the
         # specification requires. Any such mark will be considered as a part
         # of the document.
-        #
-        # TODO: We need to make tab handling rules more sane. A good rule is
-        #   Tabs cannot precede tokens
-        #   BLOCK-SEQUENCE-START, BLOCK-MAPPING-START, BLOCK-END,
-        #   KEY(block), VALUE(block), BLOCK-ENTRY
-        # So the checking code is
-        #   if <TAB>:
-        #       self.allow_simple_keys = False
-        # We also need to add the check for `allow_simple_keys == True` to
-        # `unwind_indent` before issuing BLOCK-END.
-        # Scanners for block, flow, and plain scalars need to be modified.
 
         if self.index == 0 and self.peek() == u'\uFEFF':
             self.forward()
