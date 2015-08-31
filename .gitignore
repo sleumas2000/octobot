@@ -2,3 +2,4 @@
 __pycache__
 /log.txt
 /verbose.txt
+/config.yml
