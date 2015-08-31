@@ -14,9 +14,12 @@ print(sys.version)
 with open("config.yml", "r") as cfgfile:
 	cfg = yaml.load(cfgfile)
 ircUnencrypted = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the unencrypted socket
-if cfg['ssl']: # if ssl, wrap it
-	irc = ssl.wrap_socket(ircUnencrypted) # encrypts it
-else: # if not, don't
+try:
+	if cfg['ssl']: # if ssl, wrap it
+		irc = ssl.wrap_socket(ircUnencrypted) # encrypts it
+	else: # if not, don't
+		irc = ircUnencrypted
+except Exception as e:
 	irc = ircUnencrypted
 MODULE_EXTENSIONS = (".pyc",".py",".pyo")
 def packageContents(package_name):
