@@ -47,7 +47,7 @@ def type(input):
 		return {type:"?","from":sender,args:""}
 	sender,type = i[:2]
 	args = i[2:]
-	if type == "PRIVMSG":	
+	if type == "PRIVMSG": 
 		return {"type":type,"from":sender,"to":args[0],"message":" ".join(args[1:])[1:]}
 	else:
 		return {"type":type,"from":sender,"args":stripBlanks(args)}
