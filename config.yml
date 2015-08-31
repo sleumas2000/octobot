@@ -1,15 +1,16 @@
 ---
-server: irc.horse
+server: server
 port: 6697
+ssl: True
 defaultChannels:
-    - "#Sleu"
-    #- "#TwilightsCastle"
-nick: sleumasBot
-password: Rarity01
+    - "#OctobotTest"
+    - "#lobby"
+nick: octoBot
+password: pass1234
 logging:
     logFile: log.txt
     verboseLogFile: verbose.txt
     maxLogSize: 2097152 # in bytes  (2KiB default)
     maxVerboseLogSize: 5242880 # In bytes (5KiB default)
 commands:
-    commandPrefix: "|" # MUST be a single character for compatibility with some modules
+    commandPrefix: "!" # MUST be a single character for compatibility with some poorly written modules
