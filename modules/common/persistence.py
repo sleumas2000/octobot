@@ -4,7 +4,7 @@ def confSave(filename,dict):
 	try:
 		with open(file, "w") as saveFile:
 			print("Saved")
-			saveFile.write(yaml.dump(dict))
+			saveFile.write(yaml.dump(dict,default_flow_style=False)) # Save in the block style - it looks neater
 			return True
 	except:
 		return False
