@@ -161,7 +161,9 @@ def react(t,irc):
     command,message = common.command(common.type(t))
     args = message['args']
     sender = common.senderFormat(message['from'],"nick")
-    if command != "weather":
+    if command == None:
+        return False
+    if command.lower() != "weather":
         return False
     if len(args) == 0:
         location = getSavedData(sender)
