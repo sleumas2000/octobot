@@ -176,23 +176,13 @@ def commandReact(command,message,irc):
 			return True
 	return False
 def react(input,irc):
-	print "starting \"simpleResponse\""
 	command,message = common.command(common.type(input)) # dict
-	print("command")
-	print("message")
 	if command == None:
-		print "stopping \"simpleResponse\""
 		return
 	elif command == "":
-		print("there is a command")
-		print("it's blank")
 		textReact(message,irc)
 	elif command == "sr" or command == "simpleresponse":
-		print("there is a command")
-		print("sr")
 		srEdit(message,irc)
 	else:
-		print("there is a command")
-		print("awhatafuq")
 		commandReact(command,message,irc)
 	print "stopping \"simpleResponse\""
