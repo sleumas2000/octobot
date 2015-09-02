@@ -1,10 +1,10 @@
 ---
-server: irc.horse
+server: server
 port: 6697
 ssl: true
 defaultChannels:
     - "#OctobotTest"
-    - "#Sleu"
+    - "#lobby"
 nick: octoBot
 password: pass1234
 logging:

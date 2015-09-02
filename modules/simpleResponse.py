@@ -1,13 +1,13 @@
 # Simple Response Module for sleumasBot
 # written by sleumas2000
 __help__ = "Simple Response Module. Provides text responses on certain triggers. Also allows you to add commands. For more help, type !sr help"
-defaultConf = {'texts': [{'reactText': 'b', 'matchType': 'equals', 'matchText': 'a', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': '2', 'matchType': 'equals', 'matchText': '1', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ':(', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ":'(", 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ';(', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': 'D:', 'reactType': 'say', 'reactTo': 'channel'}], 'commands': {'hug': {'reactText': 'hugs {arg1}', 'reactType': 'me', 'reactTo': 'channel'}, 'ping': {'reactText': 'Pong {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {arg9} {arg10}', 'reactType': 'me', 'reactTo': 'channel'}, 'slap': {'reactText': 'slaps {arg1}', 'reactType': 'me', 'reactTo': 'channel'}}, 'helpText': {'edit': '!sr edit command <name> <me|say> <channel|sender> <response> or !sr edit text <equals|contains> <text to match> <me|say> <channel|sender> <response>', 'add': '!sr add command <name> <me|say> <channel|sender> <response> or !sr add text <equals|contains> <text to match> <me|say> <channel|sender> <response>', 'list': '!sr list <command|text>', 'help': 'Available commands: ADD, EDIT, LIST, REMOVE. Type !sr help <command> for more help', 'remove': '!sr remove command <name> or !sr remove text <text to match>'}}
+defaultConf = {'texts': [{'reactText': 'b', 'matchType': 'equals', 'matchText': 'a', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': '2', 'matchType': 'equals', 'matchText': '1', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ':(', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ":'(", 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': ';(', 'reactType': 'say', 'reactTo': 'channel'}, {'reactText': 'Cheer up, {sender}, All your friends are here!', 'matchType': 'contains', 'matchText': 'D:', 'reactType': 'say', 'reactTo': 'channel'}], 'commands': {'hug': {'reactText': 'hugs {arg1}', 'reactType': 'me', 'reactTo': 'channel'}, 'ping': {'reactText': 'Pong {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {arg9} {arg10}', 'reactType': 'me', 'reactTo': 'channel'}, 'slap': {'reactText': 'slaps {arg1}', 'reactType': 'me', 'reactTo': 'channel'}}, 'helpText': {'edit': '{cp}sr edit command <name> <me|say> <channel|sender> <response> or {cp}sr edit text <equals|contains> <text to match> <me|say> <channel|sender> <response>', 'add': '{cp}sr add command <name> <me|say> <channel|sender> <response> or {cp}sr add text <equals|contains> <text to match> <me|say> <channel|sender> <response>', 'list': '{cp}sr list <command|text>', 'help': 'Available commands: ADD, EDIT, LIST, REMOVE. Type {cp}sr help <command> for more help', 'remove': '{cp}sr remove command <name> or {cp}sr remove text <text to match>'}}
 import common
 import traceback
 cfg = common.persistence.confLoad("simpleResponse",defaultConf)
 helpText = cfg["helpText"]
 for k,t in helpText.items():
-	helpText.update({k:t.replace("!",common.conf.read()["commands"]["commandPrefix"])})
+	helpText.update({k:t.replace("{cp}",common.conf.read()["commands"]["commandPrefix"])})
 commands = cfg["commands"]
 texts = cfg["texts"]
 def help(args,caller,irc):
@@ -31,7 +31,7 @@ def help(args,caller,irc):
 		common.say(common.senderFormat(caller,"nick"),"Yerwhat!?",irc)
 def add(args,caller,irc):
 		if len(args) < 6:
-			common.say(common.senderFormat(caller,"nick"),"Oops, try sending the right number of arguments (see \"!sr help add\" if you're having trouble)",irc)
+			common.say(common.senderFormat(caller,"nick"),"Oops, try sending the right number of arguments (see \"{cp}sr help add\" if you're having trouble)".replace("{cp}",common.conf.read()["commands"]["commandPrefix"]),irc)
 		elif args[1][0].lower() == "c": #command
 			if len(args) > 6:
 				args[5] = " ".join(args[5:])
@@ -58,11 +58,11 @@ def add(args,caller,irc):
 						common.say(common.senderFormat(caller,"nick"),"Something done gone wrong :(",irc)
 					commands.update({name:command})
 					common.persistence.confSave("simpleResponse",{"commands":commands,"texts":texts,"helpText":helpText})
-					common.say(common.senderFormat(caller,"nick"),"Hoorah! command \"!{0}\" will be responded to by {1} with \"/{2} {3}\"".format(args[2],args[4],args[3],args[5]),irc)
+					common.say(common.senderFormat(caller,"nick"),"Hoorah! command \"{cp}{0}\" will be responded to by {1} with \"/{2} {3}\"".replace("{cp}",common.conf.read()["commands"]["commandPrefix"]).format(args[2],args[4],args[3],args[5]),irc)
 				else:
-					common.say(common.senderFormat(caller,"nick"),"Oops, something went wrong. Check all your arguments are valid. (see \"!sr help add\" if you're having trouble)",irc)
+					common.say(common.senderFormat(caller,"nick"),"Oops, something went wrong. Check all your arguments are valid. (see \"{cp}sr help add\" if you're having trouble)".replace("{cp}",common.conf.read()["commands"]["commandPrefix"]),irc)
 			else:
-				common.say(common.senderFormat(caller,"nick"),"Oops, try sending the right number of arguments (see \"!sr help add\" if you're having trouble)",irc)
+				common.say(common.senderFormat(caller,"nick"),"Oops, try sending the right number of arguments (see \"{cp}sr help add\" if you're having trouble)".replace("{cp}",common.conf.read()["commands"]["commandPrefix"]),irc)
 		elif args[1][0].lower() == "t": #text
 			if len(args) > 7:
 				args[6] = " ".join(args[6:])
