@@ -1,4 +1,9 @@
 #!/usr/local/bin/python
+class Metadata:
+	def __init__(self,version):
+		self.bot="octoBot"
+		self.version = version
+self = Metadata(version="0.1.0")
 import threading
 import socket
 import ssl
@@ -10,7 +15,7 @@ import os
 import sys
 import yaml
 from importlib import import_module
-print(sys.version)
+print("octoBot version "+self.version+" running under Python "+sys.version)
 with open("config.yml", "r") as cfgfile:
 	cfg = yaml.load(cfgfile)
 ircUnencrypted = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the unencrypted socket
