@@ -1,6 +1,7 @@
 import datetime
 import common
 from common import requests
+import json
 class Weather:
     def __init__(self,location):
         self.present = {'location':True}
@@ -146,26 +147,34 @@ def stringFromLocation(location):
     else:
         return "Exception: "+str(weather)
 def getSavedData(nick):
+    nick = common.senderFormat(nick,"nick")
     data = common.persistence.confLoad("weatherLocations",{})
     if nick in data:
         return data[nick]
     else:
         return False
 def putSavedData(nick,location):
-    data = common.persistence.confLoad("weatherLocations",{})
+    data = common.persistence.confLoad("weatherLocations",{"octoBot":"Nowhere"})
     data.update({nick:location})
     common.persistence.confSave("weatherlocations",data)
 def react(t,irc):
     command,message = common.command(common.type(t))
-    if command == "weather":
-        args = message['args']
-        if len(args) = 0:
-            location = getSavedData(message['from'])
-            if location == False:
-                common.say("Sorry, I don't know where you live. Try \"{0}weather <location>\"".format(common.conf.read()['commands']['commandPrefix']))
-            else:
-                common.say(stringFromLocation(location))
+    args = message['args']
+    sender = common.senderFormat(message['from'],"nick")
+    if command != "weather":
+        return False
+    if len(args) == 0:
+        location = getSavedData(sender)
+    else:
+        location = " ".join(args)
+        putSavedData(sender,location)
+    if location == False:
+        if message["to"].split("!")[0] != common.conf.read()["nick"]:
+            common.say(message['to'],"Sorry, I don't know where you live. Try \"{0}weather <location>\"".format(common.conf.read()['commands']['commandPrefix'])  ,  irc)
         else:
-            location = " ".join(args)
-            putSavedData(message['from'],location)
-            common.say(stringFromLocation(location))
+            common.say(common.senderFormat(message["from"],"nick"),"Sorry, I don't know where you live. Try \"{0}weather <location>\"".format(common.conf.read()['commands']['commandPrefix']),irc)
+    else:
+        if message["to"].split("!")[0] != common.conf.read()["nick"]:
+            common.say(message['to'],stringFromLocation(location),irc)
+        else:
+            common.say(common.senderFormat(message["from"],"nick"),stringFromLocation(location),irc)
