@@ -1,3 +1,6 @@
+import datetime
+import common
+from common import requests
 class Weather:
     def __init__(self,location):
         self.present = {'location':True}
@@ -5,7 +8,6 @@ class Weather:
     def register(self,param,present):
         self.present[param] = present
 def getWeatherForPlace(location): # return success(Bool), json(JSON string)/exception(Exception)
-    import comma.requests as requests
     try:
         r = requests.get('http://api.openweathermap.org/data/2.5/weather?q='+location)
     except Exception as e:
@@ -13,7 +15,6 @@ def getWeatherForPlace(location): # return success(Bool), json(JSON string)/exce
         return False, e
     return True, r.json()
 def generateObject(jsonString,location): # return weather(Weather)
-    import json
     j = json.loads(jsonString)
     w = Weather(location)
     # Cloud Coverage
@@ -137,7 +138,6 @@ def getDirFromBearing(bearing): # return compassDirection(String)
     else:
         return "N"
 def constructString(w): # weather description temp pressure humidity clouds windspeed winddir sunrise sunset
-    import datetime
     return ("The weather"+((" in "+w.location) if w.present['location'] else "")+" is"+((" "+w.weather+(" ("+w.description+")"if w.present['description'] else "")) if w.present['weather'] else " unspecified")+((" at a temperature of "+str(int(w.temp)-273)+"C"+(" (min "+str(int(w.temp_min)-273)+"C max "+str(int(w.temp_max)-273)+"C)" if w.present['temp_min'] and w.present['temp_max'] else "")) if w.present['temp'] else "")+((" with a pressure of "+str(w.pressure)+"hPa ("+"{0:.3f}".format(float(w.pressure)/1000.0)+" bar)") if w.present['pressure'] else "")+((" and a humidity of "+str(w.humidity)+"%") if w.present['humidity'] else "")+((" and a cloud coverage of "+str(w.clouds)+"%") if w.present['clouds'] else "")+((" and wind speed "+str(w.windspeed)+"m/s from bearing {0:03d} ({1})".format(int(w.winddir),getDirFromBearing(int(w.winddir)))) if w.present['winddir'] and w.present['windspeed'] else "")+("\nSunrise: {0}, Sunset: {1}".format(datetime.datetime.fromtimestamp(int(w.sunrise)).strftime('%H:%M:%S'),datetime.datetime.fromtimestamp(int(w.sunset)).strftime('%H:%M:%S')) if w.present['sunrise'] and w.present['sunset'] else ""))
 def stringFromLocation(location):
     success, weather = getWeatherForPlace(location)
@@ -145,3 +145,27 @@ def stringFromLocation(location):
         return (constructString(generateObject(str(weather).replace("u'","'").replace("'",'"'),location)))
     else:
         return "Exception: "+str(weather)
+def getSavedData(nick):
+    data = common.persistence.confLoad("weatherLocations",{})
+    if nick in data:
+        return data[nick]
+    else:
+        return False
+def putSavedData(nick,location):
+    data = common.persistence.confLoad("weatherLocations",{})
+    data.update({nick:location})
+    common.persistence.confSave("weatherlocations",data)
+def react(t,irc):
+    command,message = common.command(common.type(t))
+    if command == "weather":
+        args = message['args']
+        if len(args) = 0:
+            location = getSavedData(message['from'])
+            if location == False:
+                common.say("Sorry, I don't know where you live. Try \"{0}weather <location>\"".format(common.conf.read()['commands']['commandPrefix']))
+            else:
+                common.say(stringFromLocation(location))
+        else:
+            location = " ".join(args)
+            putSavedData(message['from'],location)
+            common.say(stringFromLocation(location))
