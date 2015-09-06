@@ -141,16 +141,6 @@ def main():
 			text=irc.recv(2040)
 			text = text.split("\r\n") [:-1]
 			for t in text:
-				if t.find("ERROR :Closing link:") != -1:
-					closingStatus = t
-					log(True,"Link Closed. Reason: %s" % (closingStatus))
-					sys.exit()
-					break
-				if t.find("[Errno 10054] An existing connection was forcibly closed") != -1:
-					closingStatus = t
-					log(True,"Link Closed. Reason: %s" % (closingStatus))
-					sys.exit()
-					break
 				if t.find("KILL "+cfg["nick"]) != -1:
 					closingStatus = t.split(" ")[0]+" killed connection because "+" ".join(t.split(" ")[3:])
 					log(True,"Link Closed. Reason: %s" % (closingStatus))
